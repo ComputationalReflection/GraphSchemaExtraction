@@ -15,7 +15,7 @@ public class NodeLocal implements NodeAdapter {
 
     @Override
     public long getId() {
-        return Long.parseLong(node.getElementId().split(":")[2]);
+        return node.getId();
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.tfm.reco;
 
 import org.neo4j.driver.internal.value.*;
 import org.neo4j.driver.types.IsoDuration;
+import org.neo4j.graphdb.spatial.CRS;
 import org.neo4j.values.storable.DurationValue;
 import org.neo4j.values.storable.PointValue;
 import org.tfm.models.*;
@@ -9,7 +10,6 @@ import org.tfm.models.*;
 import java.time.*;
 import java.util.*;
 
-import static org.neo4j.values.storable.CoordinateReferenceSystem.*;
 
 public class GetInfo {
 
