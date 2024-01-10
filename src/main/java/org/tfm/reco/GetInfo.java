@@ -2,13 +2,15 @@ package org.tfm.reco;
 
 import org.neo4j.driver.internal.value.*;
 import org.neo4j.driver.types.IsoDuration;
-import org.neo4j.graphdb.spatial.CRS;
+import org.neo4j.values.storable.CoordinateReferenceSystem;
 import org.neo4j.values.storable.DurationValue;
 import org.neo4j.values.storable.PointValue;
 import org.tfm.models.*;
 
 import java.time.*;
 import java.util.*;
+
+import static org.neo4j.values.storable.PointFields.CRS;
 
 
 public class GetInfo {
@@ -71,13 +73,13 @@ public class GetInfo {
         } else if (propertyObj instanceof LocalTime || propertyObj instanceof LocalTimeValue) {
             return PropertyTypes.LOCALTIME;
         } else if (propertyObj instanceof PointValue) {
-            if (((PointValue) propertyObj).getCRS() == CARTESIAN) {
+            if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.Cartesian)) {
                 return PropertyTypes.POINTCAR;
-            } else if (((PointValue) propertyObj).getCRS() == CARTESIAN_3D) {
+            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.Cartesian_3D)) {
                 return PropertyTypes.POINTCAR3D;
-            } else if (((PointValue) propertyObj).getCRS() == WGS_84) {
+            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS84)) {
                 return PropertyTypes.POINTWGS;
-            } else if (((PointValue) propertyObj).getCRS() == WGS_84_3D) {
+            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS84_3D)) {
                 return PropertyTypes.POINTWGS3D;
             }
         } else if (propertyObj instanceof org.neo4j.driver.internal.value.PointValue) {

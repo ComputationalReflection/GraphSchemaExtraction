@@ -14,7 +14,7 @@ public class RelationshipLocal implements RelationshipAdapter {
 
     @Override
     public long getId() {
-        return Long.parseLong(relationship.getElementId().split(":")[2]);
+        return relationship.getId();
     }
 
     @Override
@@ -24,12 +24,12 @@ public class RelationshipLocal implements RelationshipAdapter {
 
     @Override
     public long getBeginNodeId() {
-        return Long.parseLong(relationship.getStartNode().getElementId().split(":")[2]);
+        return relationship.getStartNode().getId();
     }
 
     @Override
     public long getEndNodeId() {
-        return Long.parseLong(relationship.getEndNode().getElementId().split(":")[2]);
+        return relationship.getEndNode().getId();
     }
 
     @Override

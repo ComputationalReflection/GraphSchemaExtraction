@@ -18,9 +18,10 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 public class Main {
 
-    private static final Path databaseDirectory = Path.of("target/neo4j-hello-db");
+
 
     public static void main(String[] args) {
+        final Path databaseDirectory = Path.of("target/neo4j-hello-db");
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
         GraphDatabaseService graphDb = managementService.database(DEFAULT_DATABASE_NAME);
         registerShutdownHook(managementService);
