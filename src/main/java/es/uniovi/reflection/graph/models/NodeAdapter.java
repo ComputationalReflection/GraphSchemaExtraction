@@ -1,4 +1,4 @@
-package org.tfm.models;
+package es.uniovi.reflection.graph.models;
 
 import java.util.ArrayList;
 import java.util.Map;

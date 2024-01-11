@@ -1,4 +1,4 @@
-package org.tfm.models;
+package es.uniovi.reflection.graph.models;
 
 import org.neo4j.graphdb.Node;
 

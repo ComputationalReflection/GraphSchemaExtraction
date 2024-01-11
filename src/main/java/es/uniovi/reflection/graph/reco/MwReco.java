@@ -1,9 +1,9 @@
-package org.tfm.reco;
+package es.uniovi.reflection.graph.reco;
 
-import org.tfm.db.Data;
-import org.tfm.models.MyNode;
-import org.tfm.models.MyProperty;
-import org.tfm.models.MyRelationship;
+import es.uniovi.reflection.graph.models.MyProperty;
+import es.uniovi.reflection.graph.db.Data;
+import es.uniovi.reflection.graph.models.MyNode;
+import es.uniovi.reflection.graph.models.MyRelationship;
 
 public class MwReco {
     private Data data = Data.getInstance();

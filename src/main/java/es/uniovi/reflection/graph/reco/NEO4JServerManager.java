@@ -1,4 +1,4 @@
-package org.tfm.reco;
+package es.uniovi.reflection.graph.reco;
 
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NEO4JServerManager {
     //    private static final Pattern WRITE_CYPHER_KEYWORDS = Pattern.compile("\\b(START|STOP|CREATE|MERGE|SET|DELETE|REMOVE|DROP|DETACH)\\b");
-    public static final String NEO4J_PROTOCOL = "neo4j://";
+    public static final String NEO4J_PROTOCOL = "bolt://";
     public static final String NEO4J_DEFAULT_DB = "neo4j";
 
     public Driver driver;

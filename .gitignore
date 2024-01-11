@@ -1,4 +1,6 @@
 .idea
+target
+output.json
 
 # Compiled class file
 *.class

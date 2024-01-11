@@ -1,4 +1,4 @@
-package org.tfm.models;
+package es.uniovi.reflection.graph.models;
 
 public class MyRelationship {
     private String etiqueta;

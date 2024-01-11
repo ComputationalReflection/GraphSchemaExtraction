@@ -1,16 +1,14 @@
-package org.tfm.reco;
+package es.uniovi.reflection.graph.reco;
 
+import es.uniovi.reflection.graph.models.*;
 import org.neo4j.driver.internal.value.*;
 import org.neo4j.driver.types.IsoDuration;
 import org.neo4j.values.storable.CoordinateReferenceSystem;
 import org.neo4j.values.storable.DurationValue;
 import org.neo4j.values.storable.PointValue;
-import org.tfm.models.*;
 
 import java.time.*;
 import java.util.*;
-
-import static org.neo4j.values.storable.PointFields.CRS;
 
 
 public class GetInfo {

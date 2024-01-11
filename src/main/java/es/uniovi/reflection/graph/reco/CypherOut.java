@@ -1,11 +1,11 @@
-package org.tfm.reco;
+package es.uniovi.reflection.graph.reco;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.tfm.models.NodeLocal;
-import org.tfm.models.RelationshipLocal;
+import es.uniovi.reflection.graph.models.NodeLocal;
+import es.uniovi.reflection.graph.models.RelationshipLocal;
 
 public class CypherOut {
 

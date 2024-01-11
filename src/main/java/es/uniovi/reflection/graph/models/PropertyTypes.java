@@ -1,4 +1,4 @@
-package org.tfm.models;
+package es.uniovi.reflection.graph.models;
 
 public enum PropertyTypes {
     INTEGER, FLOAT, BOOLEAN, STRING, DATE, TIME, DATETIME, LOCALTIME,

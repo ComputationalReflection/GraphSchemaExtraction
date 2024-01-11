@@ -1,16 +1,15 @@
-package org.tfm;
+package es.uniovi.reflection.graph;
 
+import es.uniovi.reflection.graph.reco.CypherOut;
+import es.uniovi.reflection.graph.reco.ServerCypherOut;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.TraversalDescription;
-import org.tfm.analysis.Analysis;
-import org.tfm.reco.CypherOut;
-import org.tfm.reco.ServerCypherOut;
-import org.tfm.reco.TraversalOut;
+import es.uniovi.reflection.graph.analysis.Analysis;
+import es.uniovi.reflection.graph.reco.TraversalOut;
 
 import java.nio.file.Path;
 

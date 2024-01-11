@@ -1,8 +1,8 @@
-package org.tfm.db;
+package es.uniovi.reflection.graph.db;
 
-import org.tfm.models.MyNode;
-import org.tfm.models.MyProperty;
-import org.tfm.models.MyRelationship;
+import es.uniovi.reflection.graph.models.MyProperty;
+import es.uniovi.reflection.graph.models.MyRelationship;
+import es.uniovi.reflection.graph.models.MyNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

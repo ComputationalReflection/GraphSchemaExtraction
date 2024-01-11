@@ -1,4 +1,4 @@
-package org.tfm.models;
+package es.uniovi.reflection.graph.models;
 
 public class MyProperty {
     private final String name;

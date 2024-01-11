@@ -1,12 +1,12 @@
-package org.tfm.reco;
+package es.uniovi.reflection.graph.reco;
 
+import es.uniovi.reflection.graph.models.NodeLocal;
+import es.uniovi.reflection.graph.models.RelationshipLocal;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
-import org.tfm.models.NodeLocal;
-import org.tfm.models.RelationshipLocal;
 
 
 public class TraversalOut {

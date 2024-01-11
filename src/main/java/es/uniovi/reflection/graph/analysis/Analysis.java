@@ -1,15 +1,16 @@
-package org.tfm.analysis;
+package es.uniovi.reflection.graph.analysis;
 
+import es.uniovi.reflection.graph.models.MyProperty;
+import es.uniovi.reflection.graph.models.MyRelationship;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.neo4j.values.storable.PointValue;
-import org.tfm.models.MyNode;
-import org.tfm.models.MyProperty;
-import org.tfm.models.MyRelationship;
-import org.tfm.models.PropertyTypes;
+import es.uniovi.reflection.graph.models.MyNode;
+import es.uniovi.reflection.graph.models.PropertyTypes;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.*;
 import java.util.*;
 import java.util.function.Function;
@@ -194,7 +195,7 @@ public class Analysis {
 
         FileWriter file;
         try {
-            file = new FileWriter("output.json");
+            file = new FileWriter(Paths.get("target","output.json").toString());
             file.write(jsonObject.toString());
             file.close();
         } catch (IOException e) {
