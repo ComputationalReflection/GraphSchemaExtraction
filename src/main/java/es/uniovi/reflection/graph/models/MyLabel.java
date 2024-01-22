@@ -1,52 +1,58 @@
-package es.uniovi.reflection.graph.reco;
+package es.uniovi.reflection.graph.models;
 
-import es.uniovi.reflection.graph.models.*;
 import org.neo4j.driver.internal.value.*;
 import org.neo4j.driver.types.IsoDuration;
+import org.neo4j.driver.types.Node;
 import org.neo4j.values.storable.CoordinateReferenceSystem;
 import org.neo4j.values.storable.DurationValue;
-import org.neo4j.values.storable.PointValue;
 
 import java.time.*;
 import java.util.*;
 
+public class MyLabel {
 
-public class GetInfo {
+    private long nNodesWLab = 0;
+    private Map<String, NodeRelationships> relationshipsOut = new HashMap<>();
+    private Map<String, NodeRelationships> relationshipsIn = new HashMap<>();
+    private Map<String, Map<PropertyTypes, List<String>>> properties = new HashMap<>();
 
-    private final MwReco mwReco = new MwReco();
-
-    public void getInfoNode(NodeAdapter node) {
-        MyNode myNode = new MyNode(node.getId());
-        //Get Labels
-        for (String label : node.getLabels()) {
-            myNode.addEtiqueta(label);
-        }
-        Collections.sort(myNode.getEtiquetas());
-        //Get Properties
-        Set<String> keys = node.getAllProperties().keySet();
-        for (String key : keys) {
-            Object propertyObj = node.getProperty(key);
-            PropertyTypes propertyType = getPropertyType(propertyObj);
-            MyProperty myProperty = new MyProperty(key, myNode.getId(), propertyType, getValueInString(propertyType, propertyObj), true);
-            mwReco.addProperty(myProperty);
-        }
-
-        mwReco.addNode(myNode);
+    public void updateNumber() {
+        nNodesWLab++;
     }
 
-    public void getInfoRelationship(RelationshipAdapter relationship) {
-        MyRelationship myRelationship = new MyRelationship(relationship.getId(), relationship.getType(), relationship.getBeginNodeId(), relationship.getEndNodeId());
-
-        //Get Properties
-        Set<String> keys = relationship.getAllProperties().keySet();
-        for (String key : keys) {
-            Object propertyObj = relationship.getProperty(key);
+    public void addProperties(Node node) {
+        Set<String> propertiesNames = node.asMap().keySet();
+        for (String propertyName : propertiesNames) {
+            if (!this.properties.containsKey(propertyName)) {
+                this.properties.put(propertyName, new HashMap<>());
+            }
+            Map<PropertyTypes, List<String>> propertiesMap = this.properties.get(propertyName);
+            Object propertyObj = node.get(propertyName);
             PropertyTypes propertyType = getPropertyType(propertyObj);
-            MyProperty myProperty = new MyProperty(key, myRelationship.getId(), propertyType, getValueInString(propertyType, propertyObj), false);
-            mwReco.addProperty(myProperty);
+            if (!propertiesMap.containsKey(propertyType)) {
+                propertiesMap.put(propertyType, new ArrayList<>());
+            }
+            List<String> values = propertiesMap.get(propertyType);
+            values.add(getValueInString(propertyType, propertyObj));
+            propertiesMap.put(propertyType, values);
+            this.properties.put(propertyName, propertiesMap);
         }
+    }
 
-        mwReco.addRelationship(myRelationship);
+    public long getnNodesWLab() {
+        return nNodesWLab;
+    }
+
+    public Map<String, NodeRelationships> getRelationshipsOut() {
+        return relationshipsOut;
+    }
+
+    public Map<String, NodeRelationships> getRelationshipsIn() {
+        return relationshipsIn;
+    }
+
+    public Map<String, Map<PropertyTypes, List<String>>> getProperties() {
+        return properties;
     }
 
     private static PropertyTypes getPropertyType(Object propertyObj) {
@@ -70,14 +76,14 @@ public class GetInfo {
             return PropertyTypes.LOCALDATETIME;
         } else if (propertyObj instanceof LocalTime || propertyObj instanceof LocalTimeValue) {
             return PropertyTypes.LOCALTIME;
-        } else if (propertyObj instanceof PointValue) {
-            if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN)) {
+        } else if (propertyObj instanceof org.neo4j.values.storable.PointValue) {
+            if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN)) {
                 return PropertyTypes.POINTCAR;
-            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN_3D)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN_3D)) {
                 return PropertyTypes.POINTCAR3D;
-            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84)) {
                 return PropertyTypes.POINTWGS;
-            } else if (((PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84_3D)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84_3D)) {
                 return PropertyTypes.POINTWGS3D;
             }
         } else if (propertyObj instanceof org.neo4j.driver.internal.value.PointValue) {
@@ -127,6 +133,7 @@ public class GetInfo {
             }
         }
         System.err.println("Error en tipo de propiedad. Propiedad: " + propertyObj.getClass());
+        System.err.println("Error en tipo de propiedad. Propiedad: " + propertyObj);
         return null;
     }
 
@@ -150,7 +157,7 @@ public class GetInfo {
                 }
                 return Long.toString(durationValueLocalToLong((DurationValue) propertyObj));
             case POINTCAR, POINTCAR3D, POINTWGS, POINTWGS3D:
-                if (propertyObj instanceof PointValue) return propertyObj.toString();
+                if (propertyObj instanceof org.neo4j.values.storable.PointValue) return propertyObj.toString();
                 return fromRemoteToLocal(propertyObj).toString();
             case ARRAYDURATION:
                 List<Long> listOfDurations = new ArrayList<>();
@@ -166,7 +173,7 @@ public class GetInfo {
                 return listOfDurations.toString();
             case ARRAYPOINTCAR, ARRAYPOINTCAR3D, ARRAYPOINTWGS, ARRAYPOINTWGS3D:
                 if (propertyObj instanceof Object[]) return propertyObj.toString();
-                List<PointValue> listOfPoints = new ArrayList<>();
+                List<org.neo4j.values.storable.PointValue> listOfPoints = new ArrayList<>();
                 for (Object point : ((ListValue) propertyObj).asList()) {
                     listOfPoints.add(fromRemoteToLocal(point));
                 }
@@ -186,7 +193,7 @@ public class GetInfo {
         return Duration.parse(durationValue.toString()).toSeconds();
     }
 
-    private PointValue fromRemoteToLocal(Object pointValue) {
+    private org.neo4j.values.storable.PointValue fromRemoteToLocal(Object pointValue) {
         Map<String, Float> myMap = new HashMap<>();
         String[] pairs = pointValue.toString().replace("Point{", "").replace("}", "").split(",");
         for (String pair : pairs) {
@@ -219,6 +226,6 @@ public class GetInfo {
                 pointBuilder.append("crs: 'cartesian-3d'})");
             }
         }
-        return PointValue.parse((pointBuilder.toString()));
+        return org.neo4j.values.storable.PointValue.parse((pointBuilder.toString()));
     }
 }

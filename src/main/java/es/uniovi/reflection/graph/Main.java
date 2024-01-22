@@ -1,5 +1,6 @@
 package es.uniovi.reflection.graph;
 
+import es.uniovi.reflection.graph.analysis.Analysis2;
 import es.uniovi.reflection.graph.reco.CypherOut;
 import es.uniovi.reflection.graph.reco.ServerCypherOut;
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -48,8 +49,12 @@ public class Main {
         serverCypherOut.getData();
         System.out.println((System.nanoTime() - startTime) / 1e9);
 
-        Analysis analysis = new Analysis();
+        /*Analysis analysis = new Analysis();
         analysis.doAnalysis(true);
+        System.out.println((System.nanoTime() - startTime) / 1e9);*/
+
+        Analysis2 analysis2 = new Analysis2();
+        analysis2.doAnalysis(true);
         System.out.println((System.nanoTime() - startTime) / 1e9);
     }
 
