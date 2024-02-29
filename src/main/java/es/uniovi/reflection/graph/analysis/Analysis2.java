@@ -1,9 +1,6 @@
 package es.uniovi.reflection.graph.analysis;
 
-import es.uniovi.reflection.graph.models.MyNode;
-import es.uniovi.reflection.graph.models.MyProperty;
-import es.uniovi.reflection.graph.models.MyRelationship;
-import es.uniovi.reflection.graph.models.PropertyTypes;
+import es.uniovi.reflection.graph.models.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.neo4j.values.storable.PointValue;
@@ -32,7 +29,7 @@ public class Analysis2 {
         long nNodes = mwAnalysis.getNNodes(); //Numero de nodos
         jsonNodesObject.put("nNodes", nNodes);
         jsonNodesObject.put("nNodesWLabel", mwAnalysis.getNNodesWLabel()); //Numero de nodos con, al menos, una etiqueta
-        Set<String> labelsNames = mwAnalysis.getLabelsNames(); //Numero de veces que aparece cada etiqueta
+        Set<String> labelsNames = mwAnalysis.getLabelsNames(); //Lista de etiquetas
 
         //For each node label
         for (String label : labelsNames) {
@@ -40,36 +37,14 @@ public class Analysis2 {
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("absolute", mwAnalysis.getLabelNumber(label));
             jsonObject1.put("relative", (double) mwAnalysis.getLabelNumber(label) / nNodes);
-            //ArrayList<MyRelationship> relationshipsOutWNodeLabel = new ArrayList<>();
-            //ArrayList<MyRelationship> relationshipsInWNodeLabel = new ArrayList<>();
 
             jsonObject1.put("nodeProperties", propertiesStatistics(mwAnalysis.getPropertiesGivenLabel(label), mwAnalysis.getLabelNumber(label)));
 
-            /*Map<String, Map<String, Integer>> relationshipsOutMap = new HashMap<>();
-            for (MyRelationship myRelationship : relationshipsOutWNodeLabel) {
-                Map<String, Integer> nodesOut = relationshipsOutMap.get(myRelationship.getEtiqueta());
-                if (nodesOut == null) nodesOut = new HashMap<>();
-                for (String nodeLabel : mwAnalysis.getNode(myRelationship.getEndNodeId()).getEtiquetas()) {
-                    nodesOut.put(nodeLabel, nodesOut.getOrDefault(nodeLabel, 0) + 1);
-                }
-                relationshipsOutMap.put(myRelationship.getEtiqueta(), nodesOut);
-            }
-
-            JSONArray jsonArrayOut = getNodeRelationshipsJSON(relationshipsOutMap);
+            JSONArray jsonArrayOut = getNodeRelationshipsJSON(mwAnalysis.getRelationshipsOutGivenLabel(label));
             jsonObject1.put("relationshipsOut", jsonArrayOut);
 
-            Map<String, Map<String, Integer>> relationshipsInMap = new HashMap<>();
-            for (MyRelationship myRelationship : relationshipsInWNodeLabel) {
-                Map<String, Integer> nodesIn = relationshipsInMap.get(myRelationship.getEtiqueta());
-                if (nodesIn == null) nodesIn = new HashMap<>();
-                for (String nodeLabel : mwAnalysis.getNode(myRelationship.getBeginNodeId()).getEtiquetas()) {
-                    nodesIn.put(nodeLabel, nodesIn.getOrDefault(nodeLabel, 0) + 1);
-                }
-                relationshipsInMap.put(myRelationship.getEtiqueta(), nodesIn);
-            }
-
-            JSONArray jsonArrayIn = getNodeRelationshipsJSON(relationshipsInMap);
-            jsonObject1.put("relationshipsIn", jsonArrayIn);*/
+            JSONArray jsonArrayIn = getNodeRelationshipsJSON(mwAnalysis.getRelationshipsInGivenLabel(label));
+            jsonObject1.put("relationshipsIn", jsonArrayIn);
 
             jsonObject2.put(label, jsonObject1);
             jsonArrayNodes.put(jsonObject2);
@@ -106,6 +81,47 @@ public class Analysis2 {
         }
         jsonObject.put("multiLabelNodes", jsonArray1);
 
+        //Every relationship
+        JSONArray jsonArrayRelationships = new JSONArray();
+        JSONObject jsonObjectRelationship = new JSONObject();
+        long nRelationships = mwAnalysis.getNRelationships();
+        jsonObjectRelationship.put("nRelationships", nRelationships);
+        jsonObjectRelationship.put("nRelationshipsWLab", nRelationships); //Numero de relaciones con tipo
+        Set<String> relationshipsTypes = mwAnalysis.getRelationshipsTypes(); //Lista de tipos de relaciones
+
+        //For each relationship type
+        for (String type : relationshipsTypes) {
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("absolute", mwAnalysis.getTypeNumber(type));
+            jsonObject1.put("relative", (double) mwAnalysis.getTypeNumber(type) / nRelationships);
+
+            jsonObject1.put("relationshipProperties", propertiesStatistics(mwAnalysis.getRelationshipProperties(type), mwAnalysis.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithInNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipNodeIn(type), mwAnalysis.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithOutNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipNodeOut(type), mwAnalysis.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithSameNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipSameNode(type), mwAnalysis.getTypeNumber(type)));
+
+            JSONArray jsonArray = new JSONArray();
+            for (String beginNodeLabel : mwAnalysis.getPropertiesGivenNodesLabel(type)) {
+                JSONObject jsonObject2 = new JSONObject();
+                JSONArray jsonArray2 = new JSONArray();
+                for (String endNodeLabel : mwAnalysis.getPropertiesGivenNodesLabelAndBegin(type, beginNodeLabel)) {
+                    JSONObject jsonObject3 = new JSONObject();
+                    jsonObject3.put(endNodeLabel, propertiesStatistics(mwAnalysis.getPropertiesGivenNodesLabelBeginEnd(type, beginNodeLabel, endNodeLabel), mwAnalysis.getTypeNumber(type)));
+                    jsonArray2.put(jsonObject3);
+                }
+                jsonObject2.put(beginNodeLabel, jsonArray2);
+                jsonArray.put(jsonObject2);
+            }
+            jsonObject1.put("relationshipGivenNodeLabelsProperties", jsonArray);
+
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put(type, jsonObject1);
+            jsonArrayRelationships.put(jsonObject2);
+        }
+        jsonObjectRelationship.put("dataLabels", jsonArrayRelationships);
+        jsonObject.put("relationships", jsonObjectRelationship);
+
         FileWriter file;
         try {
             file = new FileWriter("output2.json");
@@ -116,22 +132,37 @@ public class Analysis2 {
         }
     }
 
-    /*private JSONArray getNodeRelationshipsJSON(Map<String, Map<String, Integer>> nodeRelationships) {
+    private JSONArray getJSONOfNodesOfRelationship(Map<String, Integer> nodeTypeNumber, long nRelationshipsGivenLabel) {
+        JSONArray jsonArrayOut = new JSONArray();
+        for (String nodeLabel : nodeTypeNumber.keySet()) {
+            JSONObject jsonObject2 = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("absolute", nodeTypeNumber.get(nodeLabel));
+            jsonObject3.put("relative", (double) nodeTypeNumber.get(nodeLabel) / nRelationshipsGivenLabel);
+            jsonArray.put(jsonObject3);
+            jsonObject2.put(nodeLabel, jsonArray);
+            jsonArrayOut.put(jsonObject2);
+        }
+        return jsonArrayOut;
+    }
+
+    private JSONArray getNodeRelationshipsJSON(Map<String, NodeRelationships> nodeRelationships) {
         JSONArray jsonArrayIn = new JSONArray();
         for (String relationshipOutLabel : nodeRelationships.keySet()) {
             JSONObject jsonObject2 = new JSONObject();
             JSONArray jsonArray1 = new JSONArray();
             JSONObject jsonObject3 = new JSONObject();
-            Long absolute = nodeRelationships.get(relationshipOutLabel).values().stream().mapToLong(Integer::intValue).sum();
+            long absolute = nodeRelationships.get(relationshipOutLabel).getnRelationships();
             jsonObject3.put("absolute", absolute);
             jsonObject3.put("relative", (double) absolute / mwAnalysis.getNRelationships());
             JSONArray jsonArray2 = new JSONArray();
-            for (String relationshipOutInLabel : nodeRelationships.get(relationshipOutLabel).keySet()) {
+            for (String relationshipOutInLabel : nodeRelationships.get(relationshipOutLabel).getLabels().keySet()) {
                 JSONObject jsonObject4 = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
                 JSONArray jsonArray = new JSONArray();
-                jsonObject4.put("absolute", nodeRelationships.get(relationshipOutLabel).get(relationshipOutInLabel));
-                jsonObject4.put("relative", (double) nodeRelationships.get(relationshipOutLabel).get(relationshipOutInLabel) / absolute);
+                jsonObject4.put("absolute", nodeRelationships.get(relationshipOutLabel).getLabels().get(relationshipOutInLabel));
+                jsonObject4.put("relative", (double) nodeRelationships.get(relationshipOutLabel).getLabels().get(relationshipOutInLabel) / absolute);
                 jsonArray.put(jsonObject4);
                 jsonObject.put(relationshipOutInLabel, jsonArray);
                 jsonArray2.put(jsonObject);
@@ -142,7 +173,7 @@ public class Analysis2 {
             jsonArrayIn.put(jsonObject2);
         }
         return jsonArrayIn;
-    }*/
+    }
 
     private JSONArray propertiesStatistics(Map<String, Map<PropertyTypes, List<String>>> propertyWNumber, long nNodes) {
         JSONArray jsonArray = new JSONArray();

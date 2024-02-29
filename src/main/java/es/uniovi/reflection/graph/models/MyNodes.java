@@ -26,6 +26,18 @@ public class MyNodes {
         }
     }
 
+    public void addRelationshipsOut(String exitLabel, String relationshipType, Iterable<java.lang.String> entryLabels) {
+        MyLabel myLabelExit = labels.get(exitLabel);
+        myLabelExit.addRelationshipsOut(relationshipType, entryLabels);
+        labels.put(exitLabel, myLabelExit);
+    }
+
+    public void addRelationshipsIn(String entryLabel, String relationshipType, Iterable<java.lang.String> exitLabels) {
+        MyLabel myLabelEntry = labels.get(entryLabel);
+        myLabelEntry.addRelationshipsIn(relationshipType, exitLabels);
+        labels.put(entryLabel, myLabelEntry);
+    }
+
     public long getnNodes() {
         return nNodes;
     }

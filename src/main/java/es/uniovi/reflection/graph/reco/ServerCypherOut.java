@@ -25,7 +25,7 @@ public class ServerCypherOut {
                 Record record = result.next();
                 NodeServer nodeServer = new NodeServer((record.get("n").asNode()));
                 mwReco.addNode(record.get("n").asNode());
-                getInfo.getInfoNode(nodeServer);
+                //getInfo.getInfoNode(nodeServer);
             }
         }
 
@@ -37,7 +37,19 @@ public class ServerCypherOut {
                 NodeServer nodeStart = new NodeServer((record.get("n").asNode()));
                 RelationshipServer relationshipServer = new RelationshipServer(record.get("r").asRelationship());
                 NodeServer nodeDest = new NodeServer((record.get("m").asNode()));
-                getInfo.getInfoRelationship(relationshipServer);
+                //getInfo.getInfoRelationship(relationshipServer);
+
+                mwReco.addRelationship(record.get("r").asRelationship(), record.get("n").asNode().labels(), record.get("m").asNode().labels());
+
+                //Datos de las relaciones salientes de un nodo
+                for (String exitLabel : record.get("n").asNode().labels()) {
+                    mwReco.addRelationshipsOut(exitLabel, record.get("r").asRelationship().type(), record.get("m").asNode().labels());
+                }
+
+                //Datos de las relaciones entrantes de un nodo
+                for (String entryLabel : record.get("n").asNode().labels()) {
+                    mwReco.addRelationshipsIn(entryLabel, record.get("r").asRelationship().type(), record.get("m").asNode().labels());
+                }
             }
         }
     }
