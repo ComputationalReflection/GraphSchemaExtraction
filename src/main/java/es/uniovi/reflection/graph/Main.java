@@ -14,13 +14,15 @@ public class Main {
         long startTime = System.nanoTime();
         GraphData graphData = graphSchemaExtractor.getGraphData();
         long gettingDataTime = System.nanoTime();
+        System.out.println("Total nodes: " + graphData.getNNodes());
+        System.out.println("Total relationships: " + graphData.getNRelationships());
         System.out.println("Getting Graph Data time: " + (gettingDataTime - startTime) / 1e9);
+        System.out.println("Getting Graph Data memory usage: " + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1e6);
         GraphSchemaWriter graphSchemaWriter = new GraphSchemaWriter(graphData, parameters.output_file);
         graphSchemaWriter.write(true);
         long writingTime = System.nanoTime();
         System.out.println("Writing Schema time : " + (writingTime - gettingDataTime) / 1e9);
         System.out.println("Total Graph Schema Extraction Time: " + (writingTime - startTime) / 1e9);
-        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-        System.out.println("Memory Usage: " + memoryMXBean.getHeapMemoryUsage().getUsed() / 1e6);
+        System.out.println("Total memory usage: " + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1e6);
     }
 }

@@ -1,11 +1,8 @@
 package es.uniovi.reflection.graph.models;
 
-import es.uniovi.reflection.graph.models.GraphNodes;
-import es.uniovi.reflection.graph.models.GraphRelationships;
-import es.uniovi.reflection.graph.models.GraphNodeRelationships;
-import es.uniovi.reflection.graph.models.GraphPropertyTypes;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
