@@ -6,25 +6,15 @@ import es.uniovi.reflection.graph.models.NodeRelationships;
 import es.uniovi.reflection.graph.models.PropertyTypes;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class GraphData {
-    private static GraphData instance;
-
     private MyNodes nodesData = new MyNodes();
     private MyRelationships relationshipsData = new MyRelationships();
     private Map<Long, Map<Iterable<String>, Integer>> multiNodesData = new HashMap<>();
-
-    public static GraphData getInstance() {
-        if (instance == null) {
-            instance = new GraphData();
-        }
-        return instance;
-    }
 
     public void addNode(Node node) {
         nodesData.addNode(node);

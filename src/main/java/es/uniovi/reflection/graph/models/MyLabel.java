@@ -1,7 +1,6 @@
 package es.uniovi.reflection.graph.models;
 
 import org.neo4j.driver.types.Node;
-
 import java.util.*;
 
 public class MyLabel {

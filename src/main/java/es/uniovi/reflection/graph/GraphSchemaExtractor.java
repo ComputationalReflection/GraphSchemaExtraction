@@ -20,15 +20,14 @@ public class GraphSchemaExtractor {
     }
 
     public GraphData getGraphData() {
-        GraphData graphData = GraphData.getInstance();
+        GraphData graphData = new GraphData();
         Config config = Config.builder().withLogging(Logging.none()).build();
         Driver driver = GraphDatabase.driver(NEO4J_PROTOCOL + NEO4J_HOST + ":" + NEO4J_PORT, AuthTokens.basic(NEO4J_USER, NEO4J_PASSWORD), config);
 
         try (Session session = driver.session(SessionConfig.forDatabase(NEO4J_DATABASE))) {
             Result result = session.run("MATCH (n) RETURN n");
             while (result.hasNext()) {
-                Record record = result.next();
-                graphData.addNode(record.get("n").asNode());
+                graphData.addNode(result.next().get("n").asNode());
             }
         }
 

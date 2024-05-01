@@ -1,6 +1,5 @@
-package es.uniovi.reflection.graph.analysis;
+package es.uniovi.reflection.graph;
 
-import es.uniovi.reflection.graph.GraphData;
 import es.uniovi.reflection.graph.models.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,16 +12,18 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Analysis2 {
+public class GraphDataWriter {
 
-    private GraphData mwAnalysis;
+    private GraphData graphData;
+    private String outputFile;
 
-    public Analysis2(GraphData graphData){
-        this.mwAnalysis = graphData;
+    public GraphDataWriter(GraphData graphData, String outputFile){
+        this.graphData = graphData;
+        this.outputFile = outputFile;
     }
     private boolean doColumnArray;
 
-    public void doAnalysis(boolean doColumnArray) {
+    public void write(boolean doColumnArray) {
 
         this.doColumnArray = doColumnArray;
 
@@ -31,24 +32,24 @@ public class Analysis2 {
         //Every node
         JSONArray jsonArrayNodes = new JSONArray();
         JSONObject jsonNodesObject = new JSONObject();
-        long nNodes = mwAnalysis.getNNodes(); //Numero de nodos
+        long nNodes = graphData.getNNodes(); //Numero de nodos
         jsonNodesObject.put("nNodes", nNodes);
-        jsonNodesObject.put("nNodesWLabel", mwAnalysis.getNNodesWLabel()); //Numero de nodos con, al menos, una etiqueta
-        Set<String> labelsNames = mwAnalysis.getLabelsNames(); //Lista de etiquetas
+        jsonNodesObject.put("nNodesWLabel", graphData.getNNodesWLabel()); //Numero de nodos con, al menos, una etiqueta
+        Set<String> labelsNames = graphData.getLabelsNames(); //Lista de etiquetas
 
         //For each node label
         for (String label : labelsNames) {
             JSONObject jsonObject2 = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("absolute", mwAnalysis.getLabelNumber(label));
-            jsonObject1.put("relative", (double) mwAnalysis.getLabelNumber(label) / nNodes);
+            jsonObject1.put("absolute", graphData.getLabelNumber(label));
+            jsonObject1.put("relative", (double) graphData.getLabelNumber(label) / nNodes);
 
-            jsonObject1.put("nodeProperties", propertiesStatistics(mwAnalysis.getPropertiesGivenLabel(label), mwAnalysis.getLabelNumber(label)));
+            jsonObject1.put("nodeProperties", propertiesStatistics(graphData.getPropertiesGivenLabel(label), graphData.getLabelNumber(label)));
 
-            JSONArray jsonArrayOut = getNodeRelationshipsJSON(mwAnalysis.getRelationshipsOutGivenLabel(label));
+            JSONArray jsonArrayOut = getNodeRelationshipsJSON(graphData.getRelationshipsOutGivenLabel(label));
             jsonObject1.put("relationshipsOut", jsonArrayOut);
 
-            JSONArray jsonArrayIn = getNodeRelationshipsJSON(mwAnalysis.getRelationshipsInGivenLabel(label));
+            JSONArray jsonArrayIn = getNodeRelationshipsJSON(graphData.getRelationshipsInGivenLabel(label));
             jsonObject1.put("relationshipsIn", jsonArrayIn);
 
             jsonObject2.put(label, jsonObject1);
@@ -59,12 +60,12 @@ public class Analysis2 {
 
         //Multi label nodes
         JSONArray jsonArray1 = new JSONArray();
-        int nSimLabels = mwAnalysis.getMaxNumberOfSimultaneousLabels();
+        int nSimLabels = graphData.getMaxNumberOfSimultaneousLabels();
         if (nSimLabels > 1) {
             JSONObject jsonObject1 = new JSONObject();
             for (long i = 2; i <= nSimLabels; i++) {
                 JSONArray jsonArray2 = new JSONArray();
-                Map<Iterable<String>, Integer> simultaneousLabelsWNumber = mwAnalysis.getMapOfSimultaneousLabels(i);
+                Map<Iterable<String>, Integer> simultaneousLabelsWNumber = graphData.getMapOfSimultaneousLabels(i);
                 JSONObject jsonObject3 = new JSONObject();
                 for (Iterable<String> simLabelList : simultaneousLabelsWNumber.keySet()) {
                     JSONArray jsonArray3 = new JSONArray();
@@ -72,7 +73,7 @@ public class Analysis2 {
                     jsonObject4.put("absolute", simultaneousLabelsWNumber.get(simLabelList));
                     jsonObject4.put("relative", (double) simultaneousLabelsWNumber.get(simLabelList) / nNodes);
                     for (String simLabel : simLabelList) {
-                        jsonObject4.put(simLabel, (double) simultaneousLabelsWNumber.get(simLabelList) / mwAnalysis.getLabelNumber(simLabel));
+                        jsonObject4.put(simLabel, (double) simultaneousLabelsWNumber.get(simLabelList) / graphData.getLabelNumber(simLabel));
                     }
                     jsonArray3.put(jsonObject4);
                     jsonObject3.put(simLabelList.toString(), jsonArray3);
@@ -89,29 +90,29 @@ public class Analysis2 {
         //Every relationship
         JSONArray jsonArrayRelationships = new JSONArray();
         JSONObject jsonObjectRelationship = new JSONObject();
-        long nRelationships = mwAnalysis.getNRelationships();
+        long nRelationships = graphData.getNRelationships();
         jsonObjectRelationship.put("nRelationships", nRelationships);
         jsonObjectRelationship.put("nRelationshipsWLab", nRelationships); //Numero de relaciones con tipo
-        Set<String> relationshipsTypes = mwAnalysis.getRelationshipsTypes(); //Lista de tipos de relaciones
+        Set<String> relationshipsTypes = graphData.getRelationshipsTypes(); //Lista de tipos de relaciones
 
         //For each relationship type
         for (String type : relationshipsTypes) {
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("absolute", mwAnalysis.getTypeNumber(type));
-            jsonObject1.put("relative", (double) mwAnalysis.getTypeNumber(type) / nRelationships);
+            jsonObject1.put("absolute", graphData.getTypeNumber(type));
+            jsonObject1.put("relative", (double) graphData.getTypeNumber(type) / nRelationships);
 
-            jsonObject1.put("relationshipProperties", propertiesStatistics(mwAnalysis.getRelationshipProperties(type), mwAnalysis.getTypeNumber(type)));
-            jsonObject1.put("relationshipsWithInNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipNodeIn(type), mwAnalysis.getTypeNumber(type)));
-            jsonObject1.put("relationshipsWithOutNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipNodeOut(type), mwAnalysis.getTypeNumber(type)));
-            jsonObject1.put("relationshipsWithSameNode", getJSONOfNodesOfRelationship(mwAnalysis.getRelationshipSameNode(type), mwAnalysis.getTypeNumber(type)));
+            jsonObject1.put("relationshipProperties", propertiesStatistics(graphData.getRelationshipProperties(type), graphData.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithInNode", getJSONOfNodesOfRelationship(graphData.getRelationshipNodeIn(type), graphData.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithOutNode", getJSONOfNodesOfRelationship(graphData.getRelationshipNodeOut(type), graphData.getTypeNumber(type)));
+            jsonObject1.put("relationshipsWithSameNode", getJSONOfNodesOfRelationship(graphData.getRelationshipSameNode(type), graphData.getTypeNumber(type)));
 
             JSONArray jsonArray = new JSONArray();
-            for (String beginNodeLabel : mwAnalysis.getPropertiesGivenNodesLabel(type)) {
+            for (String beginNodeLabel : graphData.getPropertiesGivenNodesLabel(type)) {
                 JSONObject jsonObject2 = new JSONObject();
                 JSONArray jsonArray2 = new JSONArray();
-                for (String endNodeLabel : mwAnalysis.getPropertiesGivenNodesLabelAndBegin(type, beginNodeLabel)) {
+                for (String endNodeLabel : graphData.getPropertiesGivenNodesLabelAndBegin(type, beginNodeLabel)) {
                     JSONObject jsonObject3 = new JSONObject();
-                    jsonObject3.put(endNodeLabel, propertiesStatistics(mwAnalysis.getPropertiesGivenNodesLabelBeginEnd(type, beginNodeLabel, endNodeLabel), mwAnalysis.getTypeNumber(type)));
+                    jsonObject3.put(endNodeLabel, propertiesStatistics(graphData.getPropertiesGivenNodesLabelBeginEnd(type, beginNodeLabel, endNodeLabel), graphData.getTypeNumber(type)));
                     jsonArray2.put(jsonObject3);
                 }
                 jsonObject2.put(beginNodeLabel, jsonArray2);
@@ -129,7 +130,7 @@ public class Analysis2 {
 
         FileWriter file;
         try {
-            file = new FileWriter("output2.json");
+            file = new FileWriter(outputFile);
             file.write(jsonObject.toString());
             file.close();
         } catch (IOException e) {
@@ -160,7 +161,7 @@ public class Analysis2 {
             JSONObject jsonObject3 = new JSONObject();
             long absolute = nodeRelationships.get(relationshipOutLabel).getnRelationships();
             jsonObject3.put("absolute", absolute);
-            jsonObject3.put("relative", (double) absolute / mwAnalysis.getNRelationships());
+            jsonObject3.put("relative", (double) absolute / graphData.getNRelationships());
             JSONArray jsonArray2 = new JSONArray();
             for (String relationshipOutInLabel : nodeRelationships.get(relationshipOutLabel).getLabels().keySet()) {
                 JSONObject jsonObject4 = new JSONObject();
@@ -760,23 +761,6 @@ public class Analysis2 {
         long maxAppear = counted.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
 
         return counted.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), maxAppear)).map(Map.Entry::getKey).toList();
-    }
-
-    //Dado el mapa de propiedades, con el numero de veces que aparece cada una, y una propiedad, devuelve el mapa de el tipo de propiedap
-    //junto a la lista de valores de las propiedades
-    private Map<PropertyTypes, List<String>> getTypesWNumber(Map<String, Map<PropertyTypes, List<String>>> propertyWNumber, MyProperty property) {
-        Map<PropertyTypes, List<String>> typesWNumber = propertyWNumber.get(property.getName());
-        if (typesWNumber == null) {
-            typesWNumber = new HashMap<>(Map.of(property.getPropertyType(), new ArrayList<>(Collections.singletonList(property.getValue()))));
-        } else {
-            List<String> values = typesWNumber.get(property.getPropertyType());
-            if (values == null) {
-                values = new ArrayList<>();
-            }
-            values.add(property.getValue());
-            typesWNumber.put(property.getPropertyType(), values);
-        }
-        return typesWNumber;
     }
 
     private double percentileDouble(List<Double> propertiesDouble, int percentile) {

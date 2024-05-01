@@ -1,7 +1,5 @@
 package es.uniovi.reflection.graph;
 
-import es.uniovi.reflection.graph.analysis.Analysis2;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
@@ -19,8 +17,8 @@ public class Main {
         GraphData graphData = graphSchemaExtractor.getGraphData();
         long dataTime = System.nanoTime();
         System.out.println("DataTime: " + (dataTime - startTime) / 1e9);
-        Analysis2 analysis2 = new Analysis2(graphData);
-        analysis2.doAnalysis(true);
+        GraphDataWriter graphDataWriter = new GraphDataWriter(graphData, "output2.json");
+        graphDataWriter.write(true);
         long analysisTime = System.nanoTime();
         System.out.println("AnalysisTime: " + (analysisTime - dataTime) / 1e9);
         System.out.println("TotalTime: " + (analysisTime - startTime) / 1e9);

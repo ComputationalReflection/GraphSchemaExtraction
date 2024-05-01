@@ -1,12 +1,10 @@
 package es.uniovi.reflection.graph.models;
 
-import es.uniovi.reflection.graph.models.PropertyTypes;
 import org.neo4j.driver.internal.value.*;
 import org.neo4j.driver.types.Entity;
 import org.neo4j.driver.types.IsoDuration;
 import org.neo4j.values.storable.CoordinateReferenceSystem;
 import org.neo4j.values.storable.DurationValue;
-
 import java.time.*;
 import java.util.*;
 
