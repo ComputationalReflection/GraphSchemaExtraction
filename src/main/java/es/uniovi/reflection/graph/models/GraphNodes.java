@@ -4,10 +4,10 @@ import org.neo4j.driver.types.Node;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyNodes {
+public class GraphNodes {
     private long nNodes = 0;
     private long nNodesWLabel = 0;
-    private Map<String, MyLabel> labels = new HashMap<>();
+    private Map<String, GraphLabel> labels = new HashMap<>();
 
     public void addNode(Node node) {
         nNodes++;
@@ -15,26 +15,26 @@ public class MyNodes {
             nNodesWLabel++;
             node.labels().forEach(label -> {
                 if (!labels.containsKey(label)) {
-                    labels.put(label, new MyLabel());
+                    labels.put(label, new GraphLabel());
                 }
-                MyLabel myLabel = labels.get(label);
-                myLabel.updateNumber();
-                myLabel.addProperties(node);
-                labels.put(label, myLabel);
+                GraphLabel graphLabel = labels.get(label);
+                graphLabel.updateNumber();
+                graphLabel.addProperties(node);
+                labels.put(label, graphLabel);
             });
         }
     }
 
     public void addRelationshipsOut(String exitLabel, String relationshipType, Iterable<java.lang.String> entryLabels) {
-        MyLabel myLabelExit = labels.get(exitLabel);
-        myLabelExit.addRelationshipsOut(relationshipType, entryLabels);
-        labels.put(exitLabel, myLabelExit);
+        GraphLabel graphLabelExit = labels.get(exitLabel);
+        graphLabelExit.addRelationshipsOut(relationshipType, entryLabels);
+        labels.put(exitLabel, graphLabelExit);
     }
 
     public void addRelationshipsIn(String entryLabel, String relationshipType, Iterable<java.lang.String> exitLabels) {
-        MyLabel myLabelEntry = labels.get(entryLabel);
-        myLabelEntry.addRelationshipsIn(relationshipType, exitLabels);
-        labels.put(entryLabel, myLabelEntry);
+        GraphLabel graphLabelEntry = labels.get(entryLabel);
+        graphLabelEntry.addRelationshipsIn(relationshipType, exitLabels);
+        labels.put(entryLabel, graphLabelEntry);
     }
 
     public long getnNodes() {
@@ -45,7 +45,7 @@ public class MyNodes {
         return nNodesWLabel;
     }
 
-    public Map<String, MyLabel> getLabels() {
+    public Map<String, GraphLabel> getLabels() {
         return labels;
     }
 }

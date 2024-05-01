@@ -1,9 +1,9 @@
-package es.uniovi.reflection.graph;
+package es.uniovi.reflection.graph.models;
 
-import es.uniovi.reflection.graph.models.MyNodes;
-import es.uniovi.reflection.graph.models.MyRelationships;
-import es.uniovi.reflection.graph.models.NodeRelationships;
-import es.uniovi.reflection.graph.models.PropertyTypes;
+import es.uniovi.reflection.graph.models.GraphNodes;
+import es.uniovi.reflection.graph.models.GraphRelationships;
+import es.uniovi.reflection.graph.models.GraphNodeRelationships;
+import es.uniovi.reflection.graph.models.GraphPropertyTypes;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class GraphData {
-    private MyNodes nodesData = new MyNodes();
-    private MyRelationships relationshipsData = new MyRelationships();
+    private GraphNodes nodesData = new GraphNodes();
+    private GraphRelationships relationshipsData = new GraphRelationships();
     private Map<Long, Map<Iterable<String>, Integer>> multiNodesData = new HashMap<>();
 
     public void addNode(Node node) {
@@ -52,7 +52,7 @@ public class GraphData {
         return nodesData.getLabels().get(label).getnNodesWLab();
     }
 
-    public Map<String, Map<PropertyTypes, List<String>>> getPropertiesGivenLabel(String label) {
+    public Map<String, Map<GraphPropertyTypes, List<String>>> getPropertiesGivenLabel(String label) {
         return nodesData.getLabels().get(label).getProperties();
     }
 
@@ -64,11 +64,11 @@ public class GraphData {
         return multiNodesData.getOrDefault(i, new HashMap<>());
     }
 
-    public Map<String, NodeRelationships> getRelationshipsOutGivenLabel(String label) {
+    public Map<String, GraphNodeRelationships> getRelationshipsOutGivenLabel(String label) {
         return nodesData.getLabels().get(label).getRelationshipsOut();
     }
 
-    public Map<String, NodeRelationships> getRelationshipsInGivenLabel(String label) {
+    public Map<String, GraphNodeRelationships> getRelationshipsInGivenLabel(String label) {
         return nodesData.getLabels().get(label).getRelationshipsIn();
     }
 
@@ -88,7 +88,7 @@ public class GraphData {
         return relationshipsData.getTypes().get(label).getNRelationshipsWType();
     }
 
-    public Map<String, Map<PropertyTypes, List<String>>> getRelationshipProperties(String type) {
+    public Map<String, Map<GraphPropertyTypes, List<String>>> getRelationshipProperties(String type) {
         return relationshipsData.getTypes().get(type).getProperties();
     }
 
@@ -112,7 +112,7 @@ public class GraphData {
         return relationshipsData.getTypes().get(type).getRelationshipGivenNodeLabelsProperties().get(beginNodeLabel).keySet();
     }
 
-    public Map<String, Map<PropertyTypes, List<String>>> getPropertiesGivenNodesLabelBeginEnd(String type, String beginNodeLabel, String endNodeLabel) {
+    public Map<String, Map<GraphPropertyTypes, List<String>>> getPropertiesGivenNodesLabelBeginEnd(String type, String beginNodeLabel, String endNodeLabel) {
         return relationshipsData.getTypes().get(type).getRelationshipGivenNodeLabelsProperties().get(beginNodeLabel).get(endNodeLabel);
     }
 }

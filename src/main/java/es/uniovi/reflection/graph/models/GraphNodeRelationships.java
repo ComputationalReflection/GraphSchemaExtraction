@@ -3,7 +3,7 @@ package es.uniovi.reflection.graph.models;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NodeRelationships {
+public class GraphNodeRelationships {
 
     private long nRelationships = 0;
     private Map<String, Integer> labels = new HashMap<>();

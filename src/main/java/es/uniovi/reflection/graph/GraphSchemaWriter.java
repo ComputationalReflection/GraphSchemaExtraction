@@ -12,12 +12,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GraphDataWriter {
+public class GraphSchemaWriter {
 
     private GraphData graphData;
     private String outputFile;
 
-    public GraphDataWriter(GraphData graphData, String outputFile){
+    public GraphSchemaWriter(GraphData graphData, String outputFile){
         this.graphData = graphData;
         this.outputFile = outputFile;
     }
@@ -153,7 +153,7 @@ public class GraphDataWriter {
         return jsonArrayOut;
     }
 
-    private JSONArray getNodeRelationshipsJSON(Map<String, NodeRelationships> nodeRelationships) {
+    private JSONArray getNodeRelationshipsJSON(Map<String, GraphNodeRelationships> nodeRelationships) {
         JSONArray jsonArrayIn = new JSONArray();
         for (String relationshipOutLabel : nodeRelationships.keySet()) {
             JSONObject jsonObject2 = new JSONObject();
@@ -181,7 +181,7 @@ public class GraphDataWriter {
         return jsonArrayIn;
     }
 
-    private JSONArray propertiesStatistics(Map<String, Map<PropertyTypes, List<String>>> propertyWNumber, long nNodes) {
+    private JSONArray propertiesStatistics(Map<String, Map<GraphPropertyTypes, List<String>>> propertyWNumber, long nNodes) {
         JSONArray jsonArray = new JSONArray();
         for (String propertyName : propertyWNumber.keySet()) {
             JSONObject jsonObject3 = new JSONObject();
@@ -191,7 +191,7 @@ public class GraphDataWriter {
             jsonObject.put("absolute", absolute);
             jsonObject.put("relative", (double) absolute / nNodes);
             JSONArray jsonArray1 = new JSONArray();
-            for (PropertyTypes propertyType : propertyWNumber.get(propertyName).keySet()) {
+            for (GraphPropertyTypes propertyType : propertyWNumber.get(propertyName).keySet()) {
                 JSONObject jsonObject2 = new JSONObject();
                 jsonObject2.put("absolute", propertyWNumber.get(propertyName).get(propertyType).size());
                 jsonObject2.put("relative", (double) propertyWNumber.get(propertyName).get(propertyType).size() / absolute);
@@ -212,7 +212,7 @@ public class GraphDataWriter {
     }
 
     //Dado el tipo de valor de la propiedad, junto a la lista de valores, devuelve la lista de valores con los tipos correctos.
-    private ArrayList<Object> stringToCorrectType(PropertyTypes propertyType, List<String> propertyValues) {
+    private ArrayList<Object> stringToCorrectType(GraphPropertyTypes propertyType, List<String> propertyValues) {
         ArrayList<Object> values = new ArrayList<>();
         for (String propertyValue : propertyValues) {
             switch (propertyType) {
@@ -259,7 +259,7 @@ public class GraphDataWriter {
     }
 
     //Dado el nombre de la propiedad, el tipo, y los valores de la misma; realiza las estadisticas necesarias del tipo y las añade al JSON.
-    private JSONArray doStatistics(PropertyTypes propertyType, ArrayList<Object> propertiesWCorrectType) {
+    private JSONArray doStatistics(GraphPropertyTypes propertyType, ArrayList<Object> propertiesWCorrectType) {
         JSONArray jsonArray = new JSONArray();
         switch (propertyType) {
             case INTEGER, DURATION: {
@@ -563,9 +563,9 @@ public class GraphDataWriter {
         return sizeStats;
     }
 
-    private ArrayList<Object> createBigArray(PropertyTypes propertyTypes, ArrayList<Object> propertiesWCorrectType) {
+    private ArrayList<Object> createBigArray(GraphPropertyTypes graphPropertyTypes, ArrayList<Object> propertiesWCorrectType) {
         ArrayList<Object> arraysElements = new ArrayList<>();
-        switch (propertyTypes) {
+        switch (graphPropertyTypes) {
             case ARRAYSTRING -> {
                 propertiesWCorrectType.forEach(list -> arraysElements.addAll((List<Object>) list));
             }
@@ -610,9 +610,9 @@ public class GraphDataWriter {
         return arraysElements;
     }
 
-    private ArrayList<Object> createColumnBigArray(PropertyTypes propertyTypes, ArrayList<Object> propertiesWCorrectType, int column) {
+    private ArrayList<Object> createColumnBigArray(GraphPropertyTypes graphPropertyTypes, ArrayList<Object> propertiesWCorrectType, int column) {
         ArrayList<Object> columnElements = new ArrayList<>();
-        switch (propertyTypes) {
+        switch (graphPropertyTypes) {
             case ARRAYSTRING -> {
                 for (Object list : propertiesWCorrectType) {
                     if (column < ((List<Object>) list).size()) {
@@ -673,40 +673,40 @@ public class GraphDataWriter {
         return columnElements;
     }
 
-    private PropertyTypes getArrayType(PropertyTypes propertyType) {
+    private GraphPropertyTypes getArrayType(GraphPropertyTypes propertyType) {
         switch (propertyType) {
             case ARRAYSTRING -> {
-                return PropertyTypes.STRING;
+                return GraphPropertyTypes.STRING;
             }
             case ARRAYBOOLEAN -> {
-                return PropertyTypes.BOOLEAN;
+                return GraphPropertyTypes.BOOLEAN;
             }
             case ARRAYDATE -> {
-                return PropertyTypes.DATE;
+                return GraphPropertyTypes.DATE;
             }
             case ARRAYTIME -> {
-                return PropertyTypes.TIME;
+                return GraphPropertyTypes.TIME;
             }
             case ARRAYDATETIME -> {
-                return PropertyTypes.DATETIME;
+                return GraphPropertyTypes.DATETIME;
             }
             case ARRAYLOCALDATETIME -> {
-                return PropertyTypes.LOCALDATETIME;
+                return GraphPropertyTypes.LOCALDATETIME;
             }
             case ARRAYLOCALTIME -> {
-                return PropertyTypes.LOCALTIME;
+                return GraphPropertyTypes.LOCALTIME;
             }
             case ARRAYPOINTCAR -> {
-                return PropertyTypes.POINTCAR;
+                return GraphPropertyTypes.POINTCAR;
             }
             case ARRAYPOINTCAR3D -> {
-                return PropertyTypes.POINTCAR3D;
+                return GraphPropertyTypes.POINTCAR3D;
             }
             case ARRAYPOINTWGS -> {
-                return PropertyTypes.POINTWGS;
+                return GraphPropertyTypes.POINTWGS;
             }
             case ARRAYPOINTWGS3D -> {
-                return PropertyTypes.POINTWGS3D;
+                return GraphPropertyTypes.POINTWGS3D;
             }
             default -> {
                 System.err.println("Error en tipo de propiedad. Propiedad: " + propertyType);

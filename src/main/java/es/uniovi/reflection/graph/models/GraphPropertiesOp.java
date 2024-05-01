@@ -8,17 +8,17 @@ import org.neo4j.values.storable.DurationValue;
 import java.time.*;
 import java.util.*;
 
-public class PropertiesOp {
+public class GraphPropertiesOp {
 
-    public static void updatePropertiesMap(Map<String, Map<PropertyTypes, List<String>>> properties, Entity entity) {
+    public static void updatePropertiesMap(Map<String, Map<GraphPropertyTypes, List<String>>> properties, Entity entity) {
         Set<String> propertiesNames = entity.asMap().keySet();
         for (String propertyName : propertiesNames) {
             if (!properties.containsKey(propertyName)) {
                 properties.put(propertyName, new HashMap<>());
             }
-            Map<PropertyTypes, List<String>> propertiesMap = properties.get(propertyName);
+            Map<GraphPropertyTypes, List<String>> propertiesMap = properties.get(propertyName);
             Object propertyObj = entity.get(propertyName);
-            PropertyTypes propertyType = getPropertyType(propertyObj);
+            GraphPropertyTypes propertyType = getPropertyType(propertyObj);
             if (!propertiesMap.containsKey(propertyType)) {
                 propertiesMap.put(propertyType, new ArrayList<>());
             }
@@ -29,46 +29,46 @@ public class PropertiesOp {
         }
     }
 
-    private static PropertyTypes getPropertyType(Object propertyObj) {
+    private static GraphPropertyTypes getPropertyType(Object propertyObj) {
         if (propertyObj instanceof Long || propertyObj instanceof IntegerValue) {
-            return PropertyTypes.INTEGER;
+            return GraphPropertyTypes.INTEGER;
         } else if (propertyObj instanceof Double || propertyObj instanceof FloatValue) {
-            return PropertyTypes.FLOAT;
+            return GraphPropertyTypes.FLOAT;
         } else if (propertyObj instanceof String || propertyObj instanceof StringValue) {
-            return PropertyTypes.STRING;
+            return GraphPropertyTypes.STRING;
         } else if (propertyObj instanceof Boolean || propertyObj instanceof BooleanValue) {
-            return PropertyTypes.BOOLEAN;
+            return GraphPropertyTypes.BOOLEAN;
         } else if (propertyObj instanceof DurationValue || propertyObj instanceof org.neo4j.driver.internal.value.DurationValue) {
-            return PropertyTypes.DURATION;
+            return GraphPropertyTypes.DURATION;
         } else if (propertyObj instanceof LocalDate || propertyObj instanceof DateValue) {
-            return PropertyTypes.DATE;
+            return GraphPropertyTypes.DATE;
         } else if (propertyObj instanceof OffsetTime || propertyObj instanceof TimeValue) {
-            return PropertyTypes.TIME;
+            return GraphPropertyTypes.TIME;
         } else if (propertyObj instanceof ZonedDateTime || propertyObj instanceof DateTimeValue) {
-            return PropertyTypes.DATETIME;
+            return GraphPropertyTypes.DATETIME;
         } else if (propertyObj instanceof LocalDateTime || propertyObj instanceof LocalDateTimeValue) {
-            return PropertyTypes.LOCALDATETIME;
+            return GraphPropertyTypes.LOCALDATETIME;
         } else if (propertyObj instanceof LocalTime || propertyObj instanceof LocalTimeValue) {
-            return PropertyTypes.LOCALTIME;
+            return GraphPropertyTypes.LOCALTIME;
         } else if (propertyObj instanceof org.neo4j.values.storable.PointValue) {
             if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN)) {
-                return PropertyTypes.POINTCAR;
+                return GraphPropertyTypes.POINTCAR;
             } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN_3D)) {
-                return PropertyTypes.POINTCAR3D;
+                return GraphPropertyTypes.POINTCAR3D;
             } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84)) {
-                return PropertyTypes.POINTWGS;
+                return GraphPropertyTypes.POINTWGS;
             } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84_3D)) {
-                return PropertyTypes.POINTWGS3D;
+                return GraphPropertyTypes.POINTWGS3D;
             }
         } else if (propertyObj instanceof org.neo4j.driver.internal.value.PointValue) {
             if (((org.neo4j.driver.internal.value.PointValue) propertyObj).asPoint().srid() == 7203) {
-                return PropertyTypes.POINTCAR;
+                return GraphPropertyTypes.POINTCAR;
             } else if (((org.neo4j.driver.internal.value.PointValue) propertyObj).asPoint().srid() == 9157) {
-                return PropertyTypes.POINTCAR3D;
+                return GraphPropertyTypes.POINTCAR3D;
             } else if (((org.neo4j.driver.internal.value.PointValue) propertyObj).asPoint().srid() == 4326) {
-                return PropertyTypes.POINTWGS;
+                return GraphPropertyTypes.POINTWGS;
             } else if (((org.neo4j.driver.internal.value.PointValue) propertyObj).asPoint().srid() == 4979) {
-                return PropertyTypes.POINTWGS3D;
+                return GraphPropertyTypes.POINTWGS3D;
             }
         } else if (propertyObj instanceof Object[] || propertyObj instanceof ListValue) {
             Object firstElement;
@@ -77,33 +77,33 @@ public class PropertiesOp {
             } else firstElement = ((ListValue) propertyObj).get(0);
             switch (getPropertyType(firstElement)) {
                 case INTEGER:
-                    return PropertyTypes.ARRAYINTEGER;
+                    return GraphPropertyTypes.ARRAYINTEGER;
                 case FLOAT:
-                    return PropertyTypes.ARRAYFLOAT;
+                    return GraphPropertyTypes.ARRAYFLOAT;
                 case STRING:
-                    return PropertyTypes.ARRAYSTRING;
+                    return GraphPropertyTypes.ARRAYSTRING;
                 case BOOLEAN:
-                    return PropertyTypes.ARRAYBOOLEAN;
+                    return GraphPropertyTypes.ARRAYBOOLEAN;
                 case DATE:
-                    return PropertyTypes.ARRAYDATE;
+                    return GraphPropertyTypes.ARRAYDATE;
                 case TIME:
-                    return PropertyTypes.ARRAYTIME;
+                    return GraphPropertyTypes.ARRAYTIME;
                 case DATETIME:
-                    return PropertyTypes.ARRAYDATETIME;
+                    return GraphPropertyTypes.ARRAYDATETIME;
                 case LOCALDATETIME:
-                    return PropertyTypes.ARRAYLOCALDATETIME;
+                    return GraphPropertyTypes.ARRAYLOCALDATETIME;
                 case LOCALTIME:
-                    return PropertyTypes.ARRAYLOCALTIME;
+                    return GraphPropertyTypes.ARRAYLOCALTIME;
                 case POINTCAR:
-                    return PropertyTypes.ARRAYPOINTCAR;
+                    return GraphPropertyTypes.ARRAYPOINTCAR;
                 case POINTCAR3D:
-                    return PropertyTypes.ARRAYPOINTCAR3D;
+                    return GraphPropertyTypes.ARRAYPOINTCAR3D;
                 case POINTWGS:
-                    return PropertyTypes.ARRAYPOINTWGS;
+                    return GraphPropertyTypes.ARRAYPOINTWGS;
                 case POINTWGS3D:
-                    return PropertyTypes.ARRAYPOINTWGS3D;
+                    return GraphPropertyTypes.ARRAYPOINTWGS3D;
                 case DURATION:
-                    return PropertyTypes.ARRAYDURATION;
+                    return GraphPropertyTypes.ARRAYDURATION;
             }
         }
         System.err.println("Error en tipo de propiedad. Propiedad: " + propertyObj.getClass());
@@ -111,7 +111,7 @@ public class PropertiesOp {
         return null;
     }
 
-    private static String getValueInString(PropertyTypes propertyType, Object propertyObj) {
+    private static String getValueInString(GraphPropertyTypes propertyType, Object propertyObj) {
         switch (propertyType) {
             case INTEGER:
             case FLOAT:

@@ -4,18 +4,18 @@ import org.neo4j.driver.types.Relationship;
 
 import java.util.*;
 
-public class MyType {
+public class GraphType {
 
     private long nRelationshipsWType = 0;
-    private Map<String, Map<PropertyTypes, List<String>>> properties = new HashMap<>();
+    private Map<String, Map<GraphPropertyTypes, List<String>>> properties = new HashMap<>();
     private Map<String, Integer> relationshipsWithInNode = new HashMap<>();
     private Map<String, Integer> relationshipsWithOutNode = new HashMap<>();
     private Map<String, Integer> relationshipsWithSameNode = new HashMap<>();
-    private Map<String, Map<String, Map<String, Map<PropertyTypes, List<String>>>>> relationshipGivenNodeLabelsProperties = new HashMap<>();
+    private Map<String, Map<String, Map<String, Map<GraphPropertyTypes, List<String>>>>> relationshipGivenNodeLabelsProperties = new HashMap<>();
 
     public void addProperties(Relationship relationship) {
         nRelationshipsWType++;
-        PropertiesOp.updatePropertiesMap(properties, relationship);
+        GraphPropertiesOp.updatePropertiesMap(properties, relationship);
     }
 
     public void addRelationshipsIn(Iterable<String> entryLabels) {
@@ -45,13 +45,13 @@ public class MyType {
             if (!relationshipGivenNodeLabelsProperties.containsKey(exitLabel)) {
                 relationshipGivenNodeLabelsProperties.put(exitLabel, new HashMap<>());
             }
-            Map<String, Map<String, Map<PropertyTypes, List<String>>>> exitMap = relationshipGivenNodeLabelsProperties.get(exitLabel);
+            Map<String, Map<String, Map<GraphPropertyTypes, List<String>>>> exitMap = relationshipGivenNodeLabelsProperties.get(exitLabel);
             for (String entryLabel : entryLabels) {
                 if (!exitMap.containsKey(entryLabel)) {
                     exitMap.put(entryLabel, new HashMap<>());
                 }
-                Map<String, Map<PropertyTypes, List<String>>> entryMap = exitMap.get(entryLabel);
-                PropertiesOp.updatePropertiesMap(entryMap, relationship);
+                Map<String, Map<GraphPropertyTypes, List<String>>> entryMap = exitMap.get(entryLabel);
+                GraphPropertiesOp.updatePropertiesMap(entryMap, relationship);
                 exitMap.put(entryLabel, entryMap);
             }
             relationshipGivenNodeLabelsProperties.put(exitLabel, exitMap);
@@ -62,7 +62,7 @@ public class MyType {
         return nRelationshipsWType;
     }
 
-    public Map<String, Map<PropertyTypes, List<String>>> getProperties() {
+    public Map<String, Map<GraphPropertyTypes, List<String>>> getProperties() {
         return properties;
     }
 
@@ -78,7 +78,7 @@ public class MyType {
         return relationshipsWithSameNode;
     }
 
-    public Map<String, Map<String, Map<String, Map<PropertyTypes, List<String>>>>> getRelationshipGivenNodeLabelsProperties() {
+    public Map<String, Map<String, Map<String, Map<GraphPropertyTypes, List<String>>>>> getRelationshipGivenNodeLabelsProperties() {
         return relationshipGivenNodeLabelsProperties;
     }
 }

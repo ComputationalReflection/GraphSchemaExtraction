@@ -1,5 +1,6 @@
 package es.uniovi.reflection.graph;
 
+import es.uniovi.reflection.graph.models.GraphData;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 
