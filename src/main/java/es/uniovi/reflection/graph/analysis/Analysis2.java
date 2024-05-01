@@ -1,5 +1,6 @@
 package es.uniovi.reflection.graph.analysis;
 
+import es.uniovi.reflection.graph.GraphData;
 import es.uniovi.reflection.graph.models.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +15,11 @@ import java.util.stream.Collectors;
 
 public class Analysis2 {
 
-    private final MwAnalysis2 mwAnalysis = new MwAnalysis2();
+    private GraphData mwAnalysis;
+
+    public Analysis2(GraphData graphData){
+        this.mwAnalysis = graphData;
+    }
     private boolean doColumnArray;
 
     public void doAnalysis(boolean doColumnArray) {

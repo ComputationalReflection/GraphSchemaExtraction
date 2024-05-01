@@ -1,6 +1,5 @@
 package es.uniovi.reflection.graph.models;
 
-import es.uniovi.reflection.graph.reco.PropertiesOp;
 import org.neo4j.driver.types.Relationship;
 
 import java.util.*;

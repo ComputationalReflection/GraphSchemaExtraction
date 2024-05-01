@@ -1,73 +1,30 @@
 package es.uniovi.reflection.graph;
 
 import es.uniovi.reflection.graph.analysis.Analysis2;
-import es.uniovi.reflection.graph.reco.CypherOut;
-import es.uniovi.reflection.graph.reco.ServerCypherOut;
-import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Result;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.traversal.TraversalDescription;
-import es.uniovi.reflection.graph.analysis.Analysis;
-import es.uniovi.reflection.graph.reco.TraversalOut;
 
-import java.nio.file.Path;
-
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 
 public class Main {
-
-
+    private static String NEO4J_DATABASE = "maniega";
+    //private static String NEO4J_HOST = "progquery.uniovi.es";
+    private static String NEO4J_HOST = "192.168.137.100";
+    private static String NEO4J_PORT = "7687";
+    private static String NEO4J_USER = "neo4j";
+    private static String NEO4J_PASSWORD = "secreto";
 
     public static void main(String[] args) {
-        final Path databaseDirectory = Path.of("target/neo4j-hello-db");
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
-        GraphDatabaseService graphDb = managementService.database(DEFAULT_DATABASE_NAME);
-        registerShutdownHook(managementService);
-        TraversalOut traversalOut = new TraversalOut();
-        CypherOut cypherOut = new CypherOut();
-        ServerCypherOut serverCypherOut = new ServerCypherOut();
-        long startTime;
-
-        try (Transaction tx = graphDb.beginTx()) {
-
-            TraversalDescription td = tx.traversalDescription();
-            Result result = tx.execute("MATCH (n) WHERE ID(n) = 0 RETURN n");
-
-//            startTime = System.nanoTime();
-//            traversalOut.getData((Node) result.next().get("n"), td);
-//            System.out.println((System.nanoTime() - startTime) / 1e9);
-
-            /*startTime = System.nanoTime();
-            cypherOut.getData(tx);
-            System.out.println((System.nanoTime() - startTime) / 1e9);*/
-
-            managementService.shutdown();
-        }
-        startTime = System.nanoTime();
-        serverCypherOut.getData();
-        System.out.println((System.nanoTime() - startTime) / 1e9);
-
-        /*Analysis analysis = new Analysis();
-        analysis.doAnalysis(true);
-        System.out.println((System.nanoTime() - startTime) / 1e9);*/
-
-        Analysis2 analysis2 = new Analysis2();
+        GraphSchemaExtractor graphSchemaExtractor = new GraphSchemaExtractor(NEO4J_DATABASE, NEO4J_HOST, NEO4J_PORT, NEO4J_USER, NEO4J_PASSWORD);
+        long startTime = System.nanoTime();
+        GraphData graphData = graphSchemaExtractor.getGraphData();
+        long dataTime = System.nanoTime();
+        System.out.println("DataTime: " + (dataTime - startTime) / 1e9);
+        Analysis2 analysis2 = new Analysis2(graphData);
         analysis2.doAnalysis(true);
-        System.out.println((System.nanoTime() - startTime) / 1e9);
-    }
-
-
-    private static void registerShutdownHook(final DatabaseManagementService managementService) {
-        // Registers a shutdown hook for the Neo4j instance so that it
-        // shuts down nicely when the VM exits (even if you "Ctrl-C" the
-        // running application).
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                managementService.shutdown();
-            }
-        });
+        long analysisTime = System.nanoTime();
+        System.out.println("AnalysisTime: " + (analysisTime - dataTime) / 1e9);
+        System.out.println("TotalTime: " + (analysisTime - startTime) / 1e9);
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        System.out.println("Memory: " + memoryMXBean.getHeapMemoryUsage().getUsed() / 1e6);
     }
 }
