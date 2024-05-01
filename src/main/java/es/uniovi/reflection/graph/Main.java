@@ -1,9 +1,7 @@
 package es.uniovi.reflection.graph;
 
 import es.uniovi.reflection.graph.models.GraphData;
-
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 
 public class Main {
 

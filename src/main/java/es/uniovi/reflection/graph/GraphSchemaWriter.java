@@ -263,17 +263,17 @@ public class GraphSchemaWriter {
         JSONArray jsonArray = new JSONArray();
         switch (propertyType) {
             case INTEGER, DURATION: {
-                List<Long> propertiesLong = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Long) val).toList());
+                List<Long> propertiesLong = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Long) val).collect(Collectors.toList()));
                 Collections.sort(propertiesLong);
                 return integerAnalysis(propertiesLong);
             }
             case FLOAT: {
-                List<Double> propertiesDouble = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Double) val).toList());
+                List<Double> propertiesDouble = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Double) val).collect(Collectors.toList()));
                 Collections.sort(propertiesDouble);
                 return floatAnalysis(propertiesDouble);
             }
             case STRING: {
-                List<String> propertiesString = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (String) val).toList());
+                List<String> propertiesString = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (String) val).collect(Collectors.toList()));
                 Collections.sort(propertiesString);
                 Map<String, Long> counted = propertiesString.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
                 for (String name : counted.keySet()) {
@@ -283,7 +283,7 @@ public class GraphSchemaWriter {
                 return jsonArray;
             }
             case BOOLEAN: {
-                List<Boolean> propertiesBoolean = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Boolean) val).toList());
+                List<Boolean> propertiesBoolean = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (Boolean) val).collect(Collectors.toList()));
                 Collections.sort(propertiesBoolean);
                 Map<Boolean, Long> counted = propertiesBoolean.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
                 for (Boolean bool : counted.keySet()) {
@@ -295,7 +295,7 @@ public class GraphSchemaWriter {
             }
             case DATE: {
                 JSONObject jsonObject1 = new JSONObject();
-                List<Long> propertiesDate = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalDate) val).toEpochDay()).toList());
+                List<Long> propertiesDate = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalDate) val).toEpochDay()).collect(Collectors.toList()));
                 Collections.sort(propertiesDate);
                 long average = (long) propertiesDate.stream().mapToLong(val -> val).average().orElse(0.0);
                 jsonObject1.put("average", LocalDate.ofEpochDay(average));
@@ -319,13 +319,13 @@ public class GraphSchemaWriter {
                 jsonObject1.put("percentile75", LocalDate.ofEpochDay(percentile75));
 
                 List<Long> listOfMax = getListOfMax(propertiesDate);
-                jsonObject1.put("moda", listOfMax.stream().map(LocalDate::ofEpochDay).toList());
+                jsonObject1.put("moda", listOfMax.stream().map(LocalDate::ofEpochDay).collect(Collectors.toList()));
                 jsonArray.put(jsonObject1);
                 return jsonArray;
             }
             case TIME: {
                 JSONObject jsonObject1 = new JSONObject();
-                List<Long> propertiesTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((OffsetTime) val).toLocalTime().toNanoOfDay()).toList());
+                List<Long> propertiesTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((OffsetTime) val).toLocalTime().toNanoOfDay()).collect(Collectors.toList()));
                 Collections.sort(propertiesTime);
                 long average = (long) propertiesTime.stream().mapToLong(val -> val).average().orElse(0.0);
                 jsonObject1.put("average", LocalTime.ofNanoOfDay(average).atOffset(ZoneOffset.of("+00:00")));
@@ -349,13 +349,13 @@ public class GraphSchemaWriter {
                 jsonObject1.put("percentile75", LocalTime.ofNanoOfDay(percentile75).atOffset(ZoneOffset.of("+00:00")));
 
                 List<Long> listOfMax = getListOfMax(propertiesTime);
-                jsonObject1.put("moda", listOfMax.stream().map(val -> LocalTime.ofNanoOfDay(val).atOffset(ZoneOffset.of("+00:00"))).toList());
+                jsonObject1.put("moda", listOfMax.stream().map(val -> LocalTime.ofNanoOfDay(val).atOffset(ZoneOffset.of("+00:00"))).collect(Collectors.toList()));
                 jsonArray.put(jsonObject1);
                 return jsonArray;
             }
             case DATETIME: {
                 JSONObject jsonObject1 = new JSONObject();
-                List<Long> propertiesDateTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((ZonedDateTime) val).toInstant().toEpochMilli()).toList());
+                List<Long> propertiesDateTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((ZonedDateTime) val).toInstant().toEpochMilli()).collect(Collectors.toList()));
                 Collections.sort(propertiesDateTime);
                 long average = (long) propertiesDateTime.stream().mapToLong(val -> val).average().orElse(0.0);
                 jsonObject1.put("average", ZonedDateTime.ofInstant(Instant.ofEpochMilli(average), ZoneId.systemDefault()));
@@ -379,13 +379,13 @@ public class GraphSchemaWriter {
                 jsonObject1.put("percentile75", ZonedDateTime.ofInstant(Instant.ofEpochMilli(percentile75), ZoneId.systemDefault()));
 
                 List<Long> listOfMax = getListOfMax(propertiesDateTime);
-                jsonObject1.put("moda", listOfMax.stream().map(val -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(val), ZoneId.systemDefault())).toList());
+                jsonObject1.put("moda", listOfMax.stream().map(val -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(val), ZoneId.systemDefault())).collect(Collectors.toList()));
                 jsonArray.put(jsonObject1);
                 return jsonArray;
             }
             case LOCALDATETIME: {
                 JSONObject jsonObject1 = new JSONObject();
-                List<Long> propertiesLocalDateTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalDateTime) val).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()).toList());
+                List<Long> propertiesLocalDateTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalDateTime) val).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()).collect(Collectors.toList()));
                 Collections.sort(propertiesLocalDateTime);
                 long average = (long) propertiesLocalDateTime.stream().mapToLong(val -> val).average().orElse(0.0);
                 jsonObject1.put("average", LocalDateTime.ofInstant(Instant.ofEpochMilli(average), ZoneId.systemDefault()));
@@ -409,13 +409,13 @@ public class GraphSchemaWriter {
                 jsonObject1.put("percentile75", LocalDateTime.ofInstant(Instant.ofEpochMilli(percentile75), ZoneId.systemDefault()));
 
                 List<Long> listOfMax = getListOfMax(propertiesLocalDateTime);
-                jsonObject1.put("moda", listOfMax.stream().map(val -> LocalDateTime.ofInstant(Instant.ofEpochMilli(val), ZoneId.systemDefault())).toList());
+                jsonObject1.put("moda", listOfMax.stream().map(val -> LocalDateTime.ofInstant(Instant.ofEpochMilli(val), ZoneId.systemDefault())).collect(Collectors.toList()));
                 jsonArray.put(jsonObject1);
                 return jsonArray;
             }
             case LOCALTIME: {
                 JSONObject jsonObject1 = new JSONObject();
-                List<Long> propertiesLocalTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalTime) val).toNanoOfDay()).toList());
+                List<Long> propertiesLocalTime = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((LocalTime) val).toNanoOfDay()).collect(Collectors.toList()));
                 Collections.sort(propertiesLocalTime);
                 long average = (long) propertiesLocalTime.stream().mapToLong(val -> val).average().orElse(0.0);
                 jsonObject1.put("average", LocalTime.ofNanoOfDay(average));
@@ -439,7 +439,7 @@ public class GraphSchemaWriter {
                 jsonObject1.put("percentile75", LocalTime.ofNanoOfDay(percentile75));
 
                 List<Long> listOfMax = getListOfMax(propertiesLocalTime);
-                jsonObject1.put("moda", listOfMax.stream().map(LocalTime::ofNanoOfDay).toList());
+                jsonObject1.put("moda", listOfMax.stream().map(LocalTime::ofNanoOfDay).collect(Collectors.toList()));
                 jsonArray.put(jsonObject1);
                 return jsonArray;
             }
@@ -556,7 +556,7 @@ public class GraphSchemaWriter {
     }
 
     private JSONObject arraySizeAnalysis(ArrayList<Object> propertiesWCorrectType) {
-        List<Long> sizeLong = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (long) ((List<Object>) val).size()).toList());
+        List<Long> sizeLong = new ArrayList<>(propertiesWCorrectType.stream().map(val -> (long) ((List<Object>) val).size()).collect(Collectors.toList()));
         Collections.sort(sizeLong);
         JSONObject sizeStats = new JSONObject();
         sizeStats.put("sizeStats", integerAnalysis(sizeLong));
@@ -760,7 +760,7 @@ public class GraphSchemaWriter {
         Map<Long, Long> counted = propertiesList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         long maxAppear = counted.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
 
-        return counted.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), maxAppear)).map(Map.Entry::getKey).toList();
+        return counted.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), maxAppear)).map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     private double percentileDouble(List<Double> propertiesDouble, int percentile) {
@@ -775,7 +775,7 @@ public class GraphSchemaWriter {
 
     private JSONObject pointAnalysis(String position, ArrayList<Object> propertiesWCorrectType) {
         JSONObject jsonObject = new JSONObject();
-        List<Double> propertiesPoint = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((Double) ((PointValue) val).get(position).asObject())).toList());
+        List<Double> propertiesPoint = new ArrayList<>(propertiesWCorrectType.stream().map(val -> ((Double) ((PointValue) val).get(position).asObject())).collect(Collectors.toList()));
         Collections.sort(propertiesPoint);
         jsonObject.put(position, floatAnalysis(propertiesPoint));
         return jsonObject;
@@ -799,7 +799,7 @@ public class GraphSchemaWriter {
         JSONObject jsonObject1 = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("percentage", (double) maxAppear / size);
-        jsonObject2.put("values", counted.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), maxAppear)).map(Map.Entry::getKey).toList());
+        jsonObject2.put("values", counted.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), maxAppear)).map(Map.Entry::getKey).collect(Collectors.toList()));
         jsonArray1.put(jsonObject2);
         jsonObject1.put("moda", jsonArray1);
         return jsonObject1;

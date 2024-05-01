@@ -51,13 +51,13 @@ public class GraphPropertiesOp {
         } else if (propertyObj instanceof LocalTime || propertyObj instanceof LocalTimeValue) {
             return GraphPropertyTypes.LOCALTIME;
         } else if (propertyObj instanceof org.neo4j.values.storable.PointValue) {
-            if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN)) {
+            if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.Cartesian)) {
                 return GraphPropertyTypes.POINTCAR;
-            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.CARTESIAN_3D)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.Cartesian_3D)) {
                 return GraphPropertyTypes.POINTCAR3D;
-            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS84)) {
                 return GraphPropertyTypes.POINTWGS;
-            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS_84_3D)) {
+            } else if (((org.neo4j.values.storable.PointValue) propertyObj).getCoordinateReferenceSystem().equals(CoordinateReferenceSystem.WGS84_3D)) {
                 return GraphPropertyTypes.POINTWGS3D;
             }
         } else if (propertyObj instanceof org.neo4j.driver.internal.value.PointValue) {
