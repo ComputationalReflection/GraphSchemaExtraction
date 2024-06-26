@@ -1,4 +1,5 @@
 .idea
+.vscode
 target
 output.json
 output2.json
@@ -28,3 +29,6 @@ output2.json
 hs_err_pid*
 replay_pid*
 /dependency-reduced-pom.xml
+
+# Web dependencies
+node_modules/

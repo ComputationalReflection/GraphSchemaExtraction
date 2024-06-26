@@ -1,0 +1,24 @@
+.main {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    justify-items: center;
+}
+
+.section {
+    background-color: aqua;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.card {
+    background-color: aqua;
+}
+
+h5 {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
