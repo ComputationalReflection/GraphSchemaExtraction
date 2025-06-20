@@ -49,7 +49,7 @@ export class MultiLabelComponent implements OnInit {
         var values = []
         for (let [key2, value2] of Object.entries((value as any[])[0])) {
           const { absolute, relative, ...analysis } = (value2 as any[])[0]
-          values.push({ absolute: (value2 as any[])[0].absolute, relative: (value2 as any[])[0].relative.toFixed(4) + "%", analysis: analysis })
+          values.push({ absolute: (value2 as any[])[0].absolute, relative: (value2 as any[])[0].relative.toFixed(2) + "%", analysis: analysis })
         }
         const dataSource = new MatTableDataSource(values);
         dataSource.filterPredicate = (data, filter: string) => {

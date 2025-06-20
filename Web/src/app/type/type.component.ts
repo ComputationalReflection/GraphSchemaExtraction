@@ -75,33 +75,33 @@ export class TypeComponent implements OnInit, DoCheck {
     if (this.typeData != undefined) {
       this.typeName = Object.keys(this.typeData)[0]
       this.absolute = this.typeData[this.typeName].absolute
-      this.relative = this.typeData[this.typeName].relative * 100
+      this.relative = Number((this.typeData[this.typeName].relative * 100).toFixed(2))
 
       var relationshipsOutArray: any[] = []
       for (const element of this.typeData[this.typeName].relationshipsWithOutNode) {
         var relationshipsOutName: string = Object.keys(element)[0]
-        relationshipsOutArray.push({ "type": relationshipsOutName, "absolute": element[relationshipsOutName][0].absolute, "relative": (element[relationshipsOutName][0].relative * 100).toFixed(4) + " %" })
+        relationshipsOutArray.push({ "type": relationshipsOutName, "absolute": element[relationshipsOutName][0].absolute, "relative": (element[relationshipsOutName][0].relative * 100).toFixed(2) + " %" })
       }
       this.dataSourceOut.data = relationshipsOutArray
 
       var relationshipsInArray: any[] = []
       for (const element of this.typeData[this.typeName].relationshipsWithInNode) {
         var relationshipsInName: string = Object.keys(element)[0]
-        relationshipsInArray.push({ "type": relationshipsInName, "absolute": element[relationshipsInName][0].absolute, "relative": (element[relationshipsInName][0].relative * 100).toFixed(4) + " %" })
+        relationshipsInArray.push({ "type": relationshipsInName, "absolute": element[relationshipsInName][0].absolute, "relative": (element[relationshipsInName][0].relative * 100).toFixed(2) + " %" })
       }
       this.dataSourceIn.data = relationshipsInArray
 
       var propertiesArray: any[] = []
       for (const element of this.typeData[this.typeName].relationshipProperties) {
         var propertiesName: string = Object.keys(element)[0]
-        propertiesArray.push({ "type": propertiesName, "absolute": element[propertiesName][0].absolute, "relative": (element[propertiesName][0].relative * 100).toFixed(4) + " %", "data": element })
+        propertiesArray.push({ "type": propertiesName, "absolute": element[propertiesName][0].absolute, "relative": (element[propertiesName][0].relative * 100).toFixed(2) + " %", "data": element })
       }
       this.dataSourceProperties.data = propertiesArray
 
       var sameNodeArray: any[] = []
       for (const element of this.typeData[this.typeName].relationshipsWithSameNode) {
         var sameNodeName: string = Object.keys(element)[0]
-        sameNodeArray.push({ "type": sameNodeName, "absolute": element[sameNodeName][0].absolute, "relative": (element[sameNodeName][0].relative * 100).toFixed(4) + " %" })
+        sameNodeArray.push({ "type": sameNodeName, "absolute": element[sameNodeName][0].absolute, "relative": (element[sameNodeName][0].relative * 100).toFixed(2) + " %" })
       }
       this.dataSourceSameNode.data = sameNodeArray
 

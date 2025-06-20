@@ -55,7 +55,7 @@ export class RelationshipsComponent implements OnInit, DoCheck {
       var other: number = 0
       for (var element of this.relationshipsData.dataLabels) {
         var typeName: string = Object.keys(element)[0]
-        this.relationshipsLabels.push({ "type": typeName, "absolute": element[typeName].absolute, "relative": (element[typeName].relative * 100).toFixed(4) + " %", "data": element })
+        this.relationshipsLabels.push({ "type": typeName, "absolute": element[typeName].absolute, "relative": (element[typeName].relative * 100).toFixed(2) + " %", "data": element })
         if (element[typeName].absolute >= this.relationshipsData.nRelationships * 0.05) {
           series.push(element[typeName].absolute)
           labels.push(typeName)

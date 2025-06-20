@@ -62,26 +62,26 @@ export class LabelComponent implements OnInit, DoCheck {
     if (this.labelData != undefined) {
       this.labelName = Object.keys(this.labelData)[0]
       this.absolute = this.labelData[this.labelName].absolute
-      this.relative = this.labelData[this.labelName].relative * 100
+      this.relative = Number((this.labelData[this.labelName].relative * 100).toFixed(2))
 
       var relationshipsOutArray: any[] = []
       for (const element of this.labelData[this.labelName].relationshipsOut) {
         var relationshipsOutName: string = Object.keys(element)[0]
-        relationshipsOutArray.push({ "type": relationshipsOutName, "absolute": element[relationshipsOutName][0].absolute, "relative": (element[relationshipsOutName][0].relative * 100).toFixed(4) + " %" })
+        relationshipsOutArray.push({ "type": relationshipsOutName, "absolute": element[relationshipsOutName][0].absolute, "relative": (element[relationshipsOutName][0].relative * 100).toFixed(2) + " %" })
       }
       this.dataSourceOut.data = relationshipsOutArray
 
       var relationshipsInArray: any[] = []
       for (const element of this.labelData[this.labelName].relationshipsIn) {
         var relationshipsInName: string = Object.keys(element)[0]
-        relationshipsInArray.push({ "type": relationshipsInName, "absolute": element[relationshipsInName][0].absolute, "relative": (element[relationshipsInName][0].relative * 100).toFixed(4) + " %" })
+        relationshipsInArray.push({ "type": relationshipsInName, "absolute": element[relationshipsInName][0].absolute, "relative": (element[relationshipsInName][0].relative * 100).toFixed(2) + " %" })
       }
       this.dataSourceIn.data = relationshipsInArray
 
       var propertiesArray: any[] = []
       for (const element of this.labelData[this.labelName].nodeProperties) {
         var propertiesName: string = Object.keys(element)[0]
-        propertiesArray.push({ "type": propertiesName, "absolute": element[propertiesName][0].absolute, "relative": (element[propertiesName][0].relative * 100).toFixed(4) + " %", "data": element })
+        propertiesArray.push({ "type": propertiesName, "absolute": element[propertiesName][0].absolute, "relative": (element[propertiesName][0].relative * 100).toFixed(2) + " %", "data": element })
       }
       this.dataSourceProperties.data = propertiesArray
     }

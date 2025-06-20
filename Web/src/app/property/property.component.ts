@@ -91,12 +91,12 @@ export class PropertyComponent implements OnInit {
   createDataSource(): void {
     this.propertyName = Object.keys(this.propertyData)[0]
     this.absolute = this.propertyData[this.propertyName][0].absolute
-    this.relative = this.propertyData[this.propertyName][0].relative * 100
+    this.relative = Number((this.propertyData[this.propertyName][0].relative * 100).toFixed(2))
 
     var propertyDataArray: Property[] = []
     for (const element of this.propertyData[this.propertyName][0].byType) {
       var propertyType: string = Object.keys(element)[0]
-      propertyDataArray.push({ "type": propertyType, "absolute": element[propertyType][0].absolute, "relative": (element[propertyType][0].relative * 100).toFixed(4) + " %", "analysis": element[propertyType][0].analysis })
+      propertyDataArray.push({ "type": propertyType, "absolute": element[propertyType][0].absolute, "relative": (element[propertyType][0].relative * 100).toFixed(2) + " %", "analysis": element[propertyType][0].analysis })
     }
     this.dataSource = new MatTableDataSource(propertyDataArray)
   }

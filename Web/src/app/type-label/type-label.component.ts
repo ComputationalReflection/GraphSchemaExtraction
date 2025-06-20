@@ -85,7 +85,7 @@ function createData(properties: any): MatTableDataSource<any> {
   var propertyDataArray: any[] = []
   for (const element of properties) {
     var propertyType: string = Object.keys(element)[0]
-    propertyDataArray.push({ "type": propertyType, "absolute": element[propertyType][0].absolute, "relative": (element[propertyType][0].relative * 100).toFixed(4) + " %", data: element })
+    propertyDataArray.push({ "type": propertyType, "absolute": element[propertyType][0].absolute, "relative": (element[propertyType][0].relative * 100).toFixed(2) + " %", data: element })
   }
   return new MatTableDataSource(propertyDataArray)
 }

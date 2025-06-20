@@ -55,7 +55,7 @@ export class NodesComponent implements OnInit, DoCheck {
       var other: number = 0
       for (var element of this.nodesData.dataLabels) {
         var labelName: string = Object.keys(element)[0]
-        this.nodesLabels.push({ "label": labelName, "absolute": element[labelName].absolute, "relative": (element[labelName].relative * 100).toFixed(4) + " %", "data": element })
+        this.nodesLabels.push({ "label": labelName, "absolute": element[labelName].absolute, "relative": (element[labelName].relative * 100).toFixed(2) + " %", "data": element })
         if (element[labelName].absolute >= this.nodesData.nNodes * 0.1) {
           series.push(element[labelName].absolute)
           labels.push(labelName)
