@@ -1,0 +1,26 @@
+main {
+    text-align: center;
+    display: grid;
+    grid-auto-flow: row;
+    row-gap: 50px;
+    margin: 0 5px 5px 5px;
+}
+
+.upper {
+    display: grid;
+    grid-auto-flow: column;
+}
+
+.chart {
+    max-width: 380px;
+    margin-top: 2rem;
+    margin-bottom: 1.8rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+}
+
+.table {
+    border-top: 1px solid black;
+    padding-top: 5px;
+}

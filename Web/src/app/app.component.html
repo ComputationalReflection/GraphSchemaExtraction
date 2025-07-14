@@ -1,0 +1,27 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" [routerLink]="['/']"><i class="fa-solid fa-house"></i>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/nodes']">Nodes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/relationships']">Relationships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/multiLabel']">Multi-label nodes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<router-outlet></router-outlet>
+<footer class="bg-dark text-white mt-5 pt-4 pb-2" style="position: sticky; bottom: 0; width: 100%;">
+    <div class="container text-center">
+        <p style="color: rgba(255, 255, 255, 0.55);;">Computational Reflection Research Group, University of Oviedo</p>
+    </div>
+</footer>

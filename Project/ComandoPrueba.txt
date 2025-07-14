@@ -1,0 +1,3 @@
+
+En Python
+type .\output.json | python -m json.tool > pretty_output.json
